@@ -1,0 +1,31 @@
+[Unit]
+Description=Contract Management Backend (Spring Boot)
+Documentation=https://example.com/contract-mgmt
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=${APP_USER}
+Group=${APP_USER}
+EnvironmentFile=-${APP_HOME}/config/.env
+ExecStart=${APP_HOME}/app/start-backend.sh
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+TimeoutStopSec=30
+KillSignal=SIGTERM
+StandardOutput=append:${APP_HOME}/logs/backend.log
+StandardError=append:${APP_HOME}/logs/backend-error.log
+LimitNOFILE=65536
+
+# 安全加固
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=yes
+ReadWritePaths=${APP_HOME}
+
+[Install]
+WantedBy=multi-user.target
